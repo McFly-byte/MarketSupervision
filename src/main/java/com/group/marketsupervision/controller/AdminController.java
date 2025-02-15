@@ -38,6 +38,30 @@ public class AdminController {
         return adminService.register(uname, pwd, phone);
     }
 
+    @PostMapping("rejectUC")
+    public Result rejectUC(
+            @RequestParam("uid") Integer uid,
+            @RequestParam("ucid") Integer ucid,
+            @RequestParam("comment") String comment
+    ) {
+        return adminService.rejectUC( ucid, comment );
+    }
+
+    @PostMapping("approvalUC")
+    public Result approvalUC (
+            @RequestParam("uid") Integer uid,
+            @RequestParam("ucid") Integer ucid
+    ) {
+        return adminService.approvalUC( ucid );
+    }
+
+    @GetMapping("getAllUnverifiedCom")
+    public Result getAllUnverifiedCom() {
+        return adminService.getAllUnverifiedCom();
+    }
+
+
+
 }
 
 

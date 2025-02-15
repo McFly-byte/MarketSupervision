@@ -6,10 +6,7 @@
 package com.group.marketsupervision.mapper;
 
 import com.group.marketsupervision.pojo.Admin;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Options;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 
@@ -28,4 +25,5 @@ public interface AdminMapper {
     @Insert("insert into admin(uname, pwd, phone, createdAt) " +
             "values(#{uname}, #{pwd}, #{phone}, #{createdAt})")
     void insertAdmin(Admin admin);
+
 }

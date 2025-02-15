@@ -6,10 +6,12 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.group.marketsupervision.controller.AdminController;
 import com.group.marketsupervision.mapper.AdminMapper;
+import com.group.marketsupervision.mapper.UCMapper;
 import com.group.marketsupervision.pojo.Admin;
 import com.group.marketsupervision.pojo.LoginInfo;
 import com.group.marketsupervision.pojo.Result;
 import com.group.marketsupervision.service.AdminService;
+import com.group.marketsupervision.service.UCService;
 import com.group.marketsupervision.util.JwtUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
+import java.sql.SQLOutput;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -118,4 +121,31 @@ class MarketSupervisionApplicationTests {
         System.out.println(adminService.register(uname, pwd, phone));
     }
 
+    @Autowired
+    private UCMapper ucMapper;
+
+    @Autowired
+    private UCService ucService;
+
+    @Test
+    void testUCRegistry() {
+        String ucname = "test2";
+        String pwd = "Aa123456";
+        String phone = "110";
+        System.out.println(ucService.register(ucname,pwd,phone));
+    }
+
+    @Test
+    void testRejectUC() {
+        Integer uid = 10;
+        Integer ucid = 1000000;
+        System.out.println(adminService.rejectUC(1000000, "反正不给通过"));
+    }
+
+    @Test
+    void testApprovalUC() {
+        Integer uid = 10;
+        Integer ucid = 1000000;
+        System.out.println(adminService.approvalUC(1000000 ));
+    }
 }

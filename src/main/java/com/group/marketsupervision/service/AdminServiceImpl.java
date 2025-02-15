@@ -1,9 +1,9 @@
 package com.group.marketsupervision.service;
 
 import com.group.marketsupervision.mapper.AdminMapper;
-import com.group.marketsupervision.pojo.Admin;
-import com.group.marketsupervision.pojo.LoginInfo;
-import com.group.marketsupervision.pojo.Result;
+import com.group.marketsupervision.mapper.CompanyMapper;
+import com.group.marketsupervision.mapper.UCMapper;
+import com.group.marketsupervision.pojo.*;
 import com.group.marketsupervision.util.JwtUtils;
 import com.group.marketsupervision.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -18,6 +19,12 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private AdminMapper adminMapper;
+
+    @Autowired
+    private UCMapper ucMapper;
+
+    @Autowired
+    private CompanyMapper comMapper;
 
     @Override
     public LoginInfo login(String uname, String pwd) {
@@ -64,6 +71,33 @@ public class AdminServiceImpl implements AdminService {
         LoginInfo loginInfo = new LoginInfo(newAdmin.getId(), newAdmin.getUname(), jwt);
 
         return Result.success(loginInfo);
+    }
+
+    @Override
+    public Result rejectUC(Integer ucid, String comment ) {
+        ucMapper.updateCommentById(ucid,comment);
+        return Result.success(comment);
+    }
+
+    @Override
+    public Result approvalUC( Integer ucid ) {
+        UnverifiedCom newUC = ucMapper.getById( ucid );
+        Company company = new Company();
+        company.setCname(newUC.getCname());
+        company.setPwd(newUC.getPwd());
+        company.setPhone(newUC.getPhone());
+        company.setCreatedAt(LocalDateTime.now());
+        comMapper.insert(company);
+        ucMapper.deleteById(ucid);
+        return Result.success(company);
+    }
+
+
+    @Override
+    public Result getAllUnverifiedCom() {
+        List<UnverifiedCom> uclist = ucMapper.getUCList();
+        if ( uclist == null ) return Result.error("没有待审核用户");
+        return Result.success(uclist);
     }
 
 }

@@ -16,4 +16,10 @@ public interface AdminService {
     /** 注册 */
     Result register(String uname, String pwd, String phone);
 
+    /** 获取全部未审核企业用户 */
+    Result getAllUnverifiedCom();
+
+    Result rejectUC(Integer ucid, String comment );
+
+    Result approvalUC(Integer ucid);
 }

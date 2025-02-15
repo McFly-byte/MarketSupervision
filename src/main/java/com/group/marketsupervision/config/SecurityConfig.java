@@ -15,13 +15,17 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//        http
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers("/admin/login", "/admin/register" ).permitAll() // 放行登录注册
+//                        .anyRequest().authenticated() // 其他接口需认证
+//                )
+//                .csrf(csrf -> csrf.disable()); // 禁用CSRF保护
         http
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/admin/login", "/admin/register").permitAll() // 放行登录注册
-                        .anyRequest().authenticated() // 其他接口需认证
+                        .anyRequest().permitAll() // 所有请求都允许访问，无需认证
                 )
                 .csrf(csrf -> csrf.disable()); // 禁用CSRF保护
-
         return http.build();
     }
 
