@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
+import com.group.marketsupervision.controller.AdminController;
 import com.group.marketsupervision.mapper.AdminMapper;
 import com.group.marketsupervision.pojo.Admin;
 import com.group.marketsupervision.pojo.LoginInfo;
@@ -99,7 +100,7 @@ class MarketSupervisionApplicationTests {
     @Test
     void testLogin() {
         String uname = "test";
-        String pwd = "0000";
+        String pwd = "Aa123456";
         LoginInfo loginInfo = adminService.login(uname, pwd);
         if(loginInfo != null){
             System.out.println("登录成功");
@@ -107,7 +108,14 @@ class MarketSupervisionApplicationTests {
         else {
             System.out.println("用户名或密码错误~");
         }
+    }
 
+    @Test
+    void testRegistry() {
+        String uname = "test2";
+        String pwd = "Aa123456";
+        String phone = "110";
+        System.out.println(adminService.register(uname, pwd, phone));
     }
 
 }

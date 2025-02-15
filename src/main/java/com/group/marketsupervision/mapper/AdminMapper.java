@@ -6,7 +6,9 @@
 package com.group.marketsupervision.mapper;
 
 import com.group.marketsupervision.pojo.Admin;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -18,4 +20,12 @@ public interface AdminMapper {
 
     @Select("select * from admin")
     List<Admin> getAdminList();
+
+    @Select("select * from admin where uname = #{uname}")
+    Admin getAdminByUname(String uname);
+
+    @Options(useGeneratedKeys = true, keyProperty = "id")
+    @Insert("insert into admin(uname, pwd, phone, createdAt) " +
+            "values(#{uname}, #{pwd}, #{phone}, #{createdAt})")
+    void insertAdmin(Admin admin);
 }

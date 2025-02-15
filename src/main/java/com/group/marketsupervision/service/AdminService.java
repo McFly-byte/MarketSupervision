@@ -13,6 +13,7 @@ public interface AdminService {
     /** 登录 */
     LoginInfo login(String uname, String pwd);
 
-//    /** 注册 */
-//    Admin register(Admin admin);
+    /** 注册 */
+    Result register(String uname, String pwd, String phone);
+
 }

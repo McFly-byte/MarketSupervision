@@ -16,10 +16,10 @@ public class AdminController {
     @Autowired
     private AdminService adminService;
 
-
-
     @PostMapping("/login")
-    public Result login(@RequestParam("uname") String uname, @RequestParam("pwd") String pwd){
+    public Result login(@RequestParam("uname") String uname,
+                        @RequestParam("pwd") String pwd
+    ){
         log.info("管理员登录 , {} {}", uname, pwd);
         LoginInfo loginInfo = adminService.login(uname, pwd);
         if(loginInfo != null){
@@ -27,4 +27,18 @@ public class AdminController {
         }
         return Result.error("用户名或密码错误~");
     }
+
+    @PostMapping("/register")
+    public Result register(
+            @RequestParam("uname") String uname,
+            @RequestParam("pwd") String pwd,
+            @RequestParam("phone") String phone
+    ) {
+        log.info("管理员注册：{} {} {}", uname, pwd, phone);
+        return adminService.register(uname, pwd, phone);
+    }
+
 }
+
+
+
