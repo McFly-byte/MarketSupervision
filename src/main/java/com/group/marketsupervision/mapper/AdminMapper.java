@@ -14,7 +14,7 @@ import java.util.List;
 @Mapper
 public interface AdminMapper {
     @Select("select * from admin where uname = #{uname} and pwd = #{pwd}")
-    public Admin getAdminByUnameAndPwd(String uname, String pwd);
+    Admin getAdminByUnameAndPwd(String uname, String pwd);
 
     @Select("select * from admin")
     List<Admin> getAdminList();

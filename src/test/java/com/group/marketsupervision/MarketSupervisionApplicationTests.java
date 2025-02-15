@@ -6,6 +6,10 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.auth0.jwt.interfaces.JWTVerifier;
 import com.group.marketsupervision.mapper.AdminMapper;
 import com.group.marketsupervision.pojo.Admin;
+import com.group.marketsupervision.pojo.LoginInfo;
+import com.group.marketsupervision.pojo.Result;
+import com.group.marketsupervision.service.AdminService;
+import com.group.marketsupervision.util.JwtUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,13 +33,8 @@ class MarketSupervisionApplicationTests {
     @Autowired
     private AdminMapper adminMapper;
 
-    @Test
-    void testLogin(){
-        String uname = "test";
-        String pwd = "0000";
-        Admin adminLogin = adminMapper.getAdminByUnameAndPwd(uname, pwd);
-        System.out.println(adminLogin);
-    }
+    @Autowired
+    private AdminService adminService;
 
     @Test
     void testGetAdminList(){
@@ -81,6 +80,34 @@ class MarketSupervisionApplicationTests {
                e.printStackTrace();
                System.out.println(0);
            }
+    }
+
+    @Test
+    void testToken() {
+        String name = "test";
+        String token = JwtUtils.genJwt(name);
+        System.out.println(token);
+        if( JwtUtils.verify(token) ) {
+            System.out.println("verifying success");
+        }
+        else {
+            System.out.println("fail");
+        }
+        System.out.println(JwtUtils.claim(token));
+    }
+
+    @Test
+    void testLogin() {
+        String uname = "test";
+        String pwd = "0000";
+        LoginInfo loginInfo = adminService.login(uname, pwd);
+        if(loginInfo != null){
+            System.out.println("登录成功");
+        }
+        else {
+            System.out.println("用户名或密码错误~");
+        }
+
     }
 
 }
