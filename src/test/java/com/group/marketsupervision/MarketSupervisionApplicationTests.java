@@ -11,6 +11,7 @@ import com.group.marketsupervision.pojo.Admin;
 import com.group.marketsupervision.pojo.LoginInfo;
 import com.group.marketsupervision.pojo.Result;
 import com.group.marketsupervision.service.AdminService;
+import com.group.marketsupervision.service.ComService;
 import com.group.marketsupervision.service.UCService;
 import com.group.marketsupervision.util.JwtUtils;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,9 @@ import static java.security.KeyRep.Type.SECRET;
 
 @SpringBootTest
 class MarketSupervisionApplicationTests {
+
+    @Autowired
+    private ComService comService;
 
     @Test
     void contextLoads() {
@@ -147,5 +151,14 @@ class MarketSupervisionApplicationTests {
         Integer uid = 10;
         Integer ucid = 1000000;
         System.out.println(adminService.approvalUC(1000000 ));
+    }
+
+
+    @Test
+    void testComLogin() {
+        String cname = "test2";
+        String pwd = "Aa123456";
+        LoginInfo loginInfo = comService.login(cname, pwd);
+        System.out.println(loginInfo);
     }
 }

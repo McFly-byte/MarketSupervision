@@ -25,7 +25,7 @@ public class AdminController {
         if(loginInfo != null){
             return Result.success(loginInfo);
         }
-        return Result.error("用户名或密码错误~");
+        return Result.error("用户名或密码错误");
     }
 
     @PostMapping("/register")
