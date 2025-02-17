@@ -45,4 +45,6 @@ public class ComServiceImpl implements ComService {
         equipmentMapper.insertEquipment(equipment);
         return Result.success(equipment);
     }
+
+
 }

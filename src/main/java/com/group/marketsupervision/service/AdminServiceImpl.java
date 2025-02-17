@@ -2,6 +2,7 @@ package com.group.marketsupervision.service;
 
 import com.group.marketsupervision.mapper.AdminMapper;
 import com.group.marketsupervision.mapper.CompanyMapper;
+import com.group.marketsupervision.mapper.EquipmentMapper;
 import com.group.marketsupervision.mapper.UCMapper;
 import com.group.marketsupervision.pojo.*;
 import com.group.marketsupervision.util.JwtUtils;
@@ -25,12 +26,17 @@ public class AdminServiceImpl implements AdminService {
 
     @Autowired
     private CompanyMapper comMapper;
+    @Autowired
+    private CompanyMapper companyMapper;
+
+    @Autowired
+    private EquipmentMapper equipmentMapper;
 
     @Override
     public LoginInfo login(String uname, String pwd) {
         Admin adminLogin = adminMapper.getAdminByUname(uname);
         // 是否有此用户
-        if(adminLogin == null){
+        if (adminLogin == null) {
             return null;
         }
         // 验证密码
@@ -74,14 +80,14 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public Result rejectUC(Integer ucid, String comment ) {
-        ucMapper.updateCommentById(ucid,comment);
+    public Result rejectUC(Integer ucid, String comment) {
+        ucMapper.updateCommentById(ucid, comment);
         return Result.success(comment);
     }
 
     @Override
-    public Result approvalUC( Integer ucid ) {
-        UnverifiedCom newUC = ucMapper.getById( ucid );
+    public Result approvalUC(Integer ucid) {
+        UnverifiedCom newUC = ucMapper.getById(ucid);
         Company company = new Company();
         company.setCname(newUC.getCname());
         company.setPwd(newUC.getPwd());
@@ -96,8 +102,70 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Result getAllUnverifiedCom() {
         List<UnverifiedCom> uclist = ucMapper.getUCList();
-        if ( uclist == null ) return Result.error("没有待审核用户");
+        if (uclist == null) return Result.error("没有待审核用户");
         return Result.success(uclist);
+    }
+
+    @Override
+    public Result findComUserByName(String cname) {
+        Company user = companyMapper.getCompanyByCname(cname);
+        if (user == null) return Result.error("没有找到该企业用户");
+        return Result.success(user);
+    }
+
+    @Override
+    public Result getAllComUser() {
+        List<Company> ComUserlist = companyMapper.getComUserList();
+        if (ComUserlist == null) return Result.error("没有企业用户");
+        return Result.success(ComUserlist);
+    }
+
+    @Override
+    public Result findEquByCid(Integer cid) {
+        Equipment equ = equipmentMapper.getEquipmentById(cid);
+        if (equ == null) {
+            return Result.error("该企业没有设备");
+        }
+        return Result.success(equ);
+    }
+
+    @Override
+    public Result getAllEquNearExpiry() {
+        List<Equipment> equipmentList = equipmentMapper.getEquipmentNearExpiry();
+        // 如果设备列表为空，返回一个错误信息
+        if (equipmentList == null || equipmentList.isEmpty()) {
+            return Result.error("没有即将逾期的设备");
+        }
+        return Result.success(equipmentList);
+    }
+    @Override
+    public Result getEquNearExpiryByCid(Integer cid) {
+        List<Equipment> equipmentList = equipmentMapper.getEquNearExpiryByCid(cid);
+        // 如果设备列表为空，返回一个错误信息
+        if (equipmentList == null || equipmentList.isEmpty()) {
+            return Result.error("该企业没有即将逾期的设备");
+        }
+        return Result.success(equipmentList);
+    }
+
+    @Override
+    public Result getAllEquExpiry() {
+        List<Equipment> equipmentList = equipmentMapper.getAllExpiredEquipment();
+        // 如果设备列表为空，返回一个错误信息
+        if (equipmentList == null || equipmentList.isEmpty()) {
+            return Result.error("该企业没有即将逾期的设备");
+        }
+        return Result.success(equipmentList);
+    }
+
+    @Override
+    public Result getAllExpiredEquByCid(Integer cid) {
+        List<Equipment> equipmentList = equipmentMapper.getAllExpiredEquByCid(cid);
+        // 如果设备列表为空，返回一个错误信息
+        if (equipmentList == null || equipmentList.isEmpty()) {
+            return Result.error("该企业没有逾期的设备");
+        }
+        return Result.success(equipmentList);
     }
 
 }

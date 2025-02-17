@@ -11,10 +11,15 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 @Mapper
 public interface CompanyMapper {
     @Select("select * from company where cname = #{cname}")
     Company getCompanyByCname(String cname);
+
+    @Select("select * from company")
+    List<Company> getComUserList();
 
     @Options(useGeneratedKeys = true, keyProperty = "id")
     @Insert("INSERT INTO company(cname, pwd, phone, createdAt) " +

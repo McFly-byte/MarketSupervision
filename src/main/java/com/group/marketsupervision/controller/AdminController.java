@@ -1,6 +1,5 @@
 package com.group.marketsupervision.controller;
 
-import com.group.marketsupervision.pojo.Admin;
 import com.group.marketsupervision.pojo.LoginInfo;
 import com.group.marketsupervision.pojo.Result;
 import com.group.marketsupervision.service.AdminService;
@@ -59,6 +58,51 @@ public class AdminController {
     public Result getAllUnverifiedCom() {
         return adminService.getAllUnverifiedCom();
     }
+
+    @GetMapping("findComUserByName")
+    //从前端获取一个name，从数据库中查询这个用户，如果有则返回其信息
+    public Result findComUserByName(
+            @RequestParam("cname") String cname
+    ) {
+        return adminService.findComUserByName(cname);
+    }
+
+    @GetMapping("getAllComUser")
+    public Result getAllComUser() {
+        return adminService.getAllComUser();
+    }
+
+    @GetMapping("getEquBycid")
+    public Result findEquByCid(
+            @RequestParam("companyId") Integer cid
+    ) {
+        return adminService.findEquByCid(cid);
+    }
+
+    @GetMapping("getAllEquNearExpiry")
+    public Result getAllEquNearExpiry() {
+        return adminService.getAllEquNearExpiry();
+    }
+
+    @GetMapping("getEquNearExpiryByCid")
+    public Result getEquNearExpiryByCid(
+            @RequestParam("companyId") Integer cid
+    ) {
+        return adminService.getEquNearExpiryByCid(cid);
+    }
+
+    @GetMapping("getAllEquExpiry")
+    public Result getAllEquExpiry() {
+        return adminService.getAllEquExpiry();
+    }
+
+    @GetMapping("getAllExpiredEquByCid")
+    public Result getAllExpiredEquBycid(
+            @RequestParam("companyId") Integer cid
+    ){
+        return adminService.getAllExpiredEquByCid(cid);
+    }
+
 
 
 

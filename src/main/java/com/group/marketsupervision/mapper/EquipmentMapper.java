@@ -33,4 +33,17 @@ public interface EquipmentMapper {
 
     @Delete("DELETE FROM equipment WHERE id = #{id}")
     void deleteEquipment(int id);
+
+    @Select("SELECT * FROM equipment WHERE nextInspectionDate <= DATE_ADD(NOW(), INTERVAL 2 MONTH)")
+    List<Equipment> getEquipmentNearExpiry();
+
+    @Select("SELECT * FROM equipment WHERE cid = #{cid} AND nextInspectionDate <= DATE_ADD(NOW(), INTERVAL 2 MONTH)")
+    List<Equipment> getEquNearExpiryByCid(Integer cid);
+
+    @Select("SELECT * FROM equipment WHERE nextInspectionDate < NOW()")
+    List<Equipment> getAllExpiredEquipment();
+
+    @Select("SELECT * FROM equipment WHERE cid = #{cid} AND nextInspectionDate < NOW()")
+    List<Equipment>getAllExpiredEquByCid(Integer cid);
+
 }
