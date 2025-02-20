@@ -1,8 +1,9 @@
 package com.group.marketsupervision.service;
 
 import com.group.marketsupervision.mapper.AdminMapper;
-import com.group.marketsupervision.mapper.CompanyMapper;
-import com.group.marketsupervision.mapper.UCMapper;
+import com.group.marketsupervision.mapper.EquipmentMapper;
+import com.group.marketsupervision.mapper.RegisterUserMapper;
+import com.group.marketsupervision.mapper.UserMapper;
 import com.group.marketsupervision.pojo.*;
 import com.group.marketsupervision.util.JwtUtils;
 import com.group.marketsupervision.util.SecurityUtils;
@@ -10,9 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class AdminServiceImpl implements AdminService {
@@ -21,29 +20,32 @@ public class AdminServiceImpl implements AdminService {
     private AdminMapper adminMapper;
 
     @Autowired
-    private UCMapper ucMapper;
-
+    private RegisterUserMapper registerUserMapper;
     @Autowired
-    private CompanyMapper comMapper;
+    private UserMapper userMapper;
+    @Autowired
+    private EquipmentMapper equipmentMapper;
 
     @Override
-    public LoginInfo login(String uname, String pwd) {
-        Admin adminLogin = adminMapper.getAdminByUname(uname);
+    public Result login(Admin admin) {
+        Admin adminLogin = adminMapper.getAdminByUname(admin.getUsername());
         // 是否有此用户
         if(adminLogin == null){
-            return null;
+            return Result.error("用户不存在");
         }
         // 验证密码
-        if (!SecurityUtils.matchesPassword(pwd, adminLogin.getPwd())) {
-            return null;
+        if (!SecurityUtils.matchesPassword(admin.getPassword(), adminLogin.getPassword())) {
+            return Result.error("密码错误");
         }
-        String jwt = JwtUtils.genJwt(adminLogin.getUname());
-        LoginInfo loginInfo = new LoginInfo(adminLogin.getId(), adminLogin.getUname(), jwt);
-        return loginInfo;
+        String jwt = JwtUtils.genJwt(adminLogin.getUsername());
+        LoginInfo loginInfo = new LoginInfo(adminLogin.getId(), adminLogin.getUsername(), jwt);
+        return Result.success(loginInfo);
     }
 
     @Override
-    public Result register(String uname, String pwd, String phone) {
+    public Result register(Admin admin) {
+        String uname = admin.getUsername();
+        String pwd = admin.getPassword();
         // 基础校验
         if (uname == null || uname.trim().isEmpty()) {
             return Result.error("用户名不能为空");
@@ -60,44 +62,53 @@ public class AdminServiceImpl implements AdminService {
         // 加密密码
         String encryptedPwd = SecurityUtils.encodePassword(pwd);
 
-        Admin newAdmin = new Admin();
-        newAdmin.setUname(uname);
-        newAdmin.setPwd(encryptedPwd);
-        newAdmin.setPhone(phone);
-        newAdmin.setCreatedAt(LocalDateTime.now()); // 关键点：设置时间
-        adminMapper.insertAdmin(newAdmin);
+        admin.setPassword(encryptedPwd);
+        admin.setCreatedTime(LocalDateTime.now()); // 关键点：设置时间
+        adminMapper.insertAdmin(admin);
 
-        String jwt = JwtUtils.genJwt(newAdmin.getUname());
-        LoginInfo loginInfo = new LoginInfo(newAdmin.getId(), newAdmin.getUname(), jwt);
+        String jwt = JwtUtils.genJwt(uname);
+        LoginInfo loginInfo = new LoginInfo(admin.getId(), uname, jwt);
 
         return Result.success(loginInfo);
     }
 
+    // todo 这里的业务逻辑还需讨论
     @Override
-    public Result rejectUC(Integer ucid, String comment ) {
-        ucMapper.updateCommentById(ucid,comment);
-        return Result.success(comment);
+    public Result reject(Integer id ) {
+        return Result.success("请联系管理员");
     }
 
+    // fixme
     @Override
-    public Result approvalUC( Integer ucid ) {
-        UnverifiedCom newUC = ucMapper.getById( ucid );
-        Company company = new Company();
-        company.setCname(newUC.getCname());
-        company.setPwd(newUC.getPwd());
-        company.setPhone(newUC.getPhone());
-        company.setCreatedAt(LocalDateTime.now());
-        comMapper.insert(company);
-        ucMapper.deleteById(ucid);
-        return Result.success(company);
+    public Result approval( Integer id ) {
+        try {
+            RegisterUser registerUser = registerUserMapper.getRegisterUserById(id);
+            User user = new User();
+            user.setUsername(registerUser.getUsername());
+            user.setPassword(registerUser.getPassword());
+            user.setCompanyName(registerUser.getCompanyName());
+            user.setRegion(registerUser.getRegion());
+            user.setCreatedTime(LocalDateTime.now());
+            userMapper.insert(user);
+            registerUserMapper.deleteById(id);
+            return Result.success(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.error("审核失败");
+        }
     }
 
 
     @Override
-    public Result getAllUnverifiedCom() {
-        List<UnverifiedCom> uclist = ucMapper.getUCList();
+    public Result getAllRegisterUser() {
+        List<RegisterUser> uclist = registerUserMapper.getAllRegisterUser();
         if ( uclist == null ) return Result.error("没有待审核用户");
         return Result.success(uclist);
+    }
+
+    @Override
+    public List<Equipment> exportAllByCompanyName(String companyName) {
+        return equipmentMapper.getEquipmentsByCompanyName(companyName);
     }
 
 }

@@ -1,38 +1,22 @@
 package com.group.marketsupervision;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.auth0.jwt.interfaces.DecodedJWT;
-import com.auth0.jwt.interfaces.JWTVerifier;
-import com.group.marketsupervision.controller.AdminController;
 import com.group.marketsupervision.mapper.AdminMapper;
-import com.group.marketsupervision.mapper.UCMapper;
 import com.group.marketsupervision.pojo.Admin;
-import com.group.marketsupervision.pojo.LoginInfo;
-import com.group.marketsupervision.pojo.Result;
+import com.group.marketsupervision.pojo.Equipment;
+import com.group.marketsupervision.pojo.RegisterUser;
+import com.group.marketsupervision.pojo.User;
 import com.group.marketsupervision.service.AdminService;
-import com.group.marketsupervision.service.ComService;
-import com.group.marketsupervision.service.UCService;
-import com.group.marketsupervision.util.JwtUtils;
+import com.group.marketsupervision.service.RegisterUserService;
+import com.group.marketsupervision.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-import java.sql.SQLOutput;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.security.KeyRep.Type.SECRET;
+import java.time.LocalDateTime;
 
 
 @SpringBootTest
 class MarketSupervisionApplicationTests {
-
-    @Autowired
-    private ComService comService;
 
     @Test
     void contextLoads() {
@@ -44,121 +28,70 @@ class MarketSupervisionApplicationTests {
     @Autowired
     private AdminService adminService;
 
-    @Test
-    void testGetAdminList(){
-        System.out.println(adminMapper.getAdminList());
-    }
-
-   @Test
-    void testGenJwt() {
-       long Time=30*60*1000; //设置jwt令牌有效时间为30分钟
-       String SECRET= "wwww";  //设置jwt令牌的密钥，自定义
-       String name = "test";
-       String token;
-       try {
-           Date d = new Date(System.currentTimeMillis() + Time); //时间格式转换，Time为上面你自己设置的时间
-           Algorithm algorithm = Algorithm.HMAC256(SECRET);   //调用Algorithm的HMAC256()方法，将密钥通过该算法加密
-           Map<String, Object> map = new HashMap<String, Object>(2);  //使用map集合存储jwt令牌的头部信息
-           map.put("Type", "jwt");
-           map.put("alg", "HS256");
-           String t = JWT.create().
-                   withHeader(map).
-                   withClaim("name", name). //写入你要存储在令牌中的信息
-                           withExpiresAt(d).
-                   sign(algorithm);   //生成令牌
-           token = t;
-           System.out.println(t);
-       } catch (Exception e) {
-           e.printStackTrace();
-           System.out.println(e);
-       }
-   }
-
-   @Test
-    void testVerifyJwt() {
-           long Time=30*60*1000; //设置jwt令牌有效时间为30分钟
-           String SECRET= "wwww";  //设置jwt令牌的密钥，自定义
-           String token = "1234";
-           try {
-               Algorithm algorithm = Algorithm.HMAC256(SECRET);  //调用Algorithm的HMAC256()方法，将密钥通过该算法加密
-               JWTVerifier verifier = JWT.require(algorithm).build();   //验证密钥是否正确
-               DecodedJWT jwt = verifier.verify(token);      //验证jwt令牌是否正确
-               System.out.println(1);
-           }catch (Exception e){
-               e.printStackTrace();
-               System.out.println(0);
-           }
-    }
-
-    @Test
-    void testToken() {
-        String name = "test";
-        String token = JwtUtils.genJwt(name);
-        System.out.println(token);
-        if( JwtUtils.verify(token) ) {
-            System.out.println("verifying success");
-        }
-        else {
-            System.out.println("fail");
-        }
-        System.out.println(JwtUtils.claim(token));
-    }
-
-    @Test
-    void testLogin() {
-        String uname = "test";
-        String pwd = "Aa123456";
-        LoginInfo loginInfo = adminService.login(uname, pwd);
-        if(loginInfo != null){
-            System.out.println("登录成功");
-        }
-        else {
-            System.out.println("用户名或密码错误~");
-        }
-    }
-
-    @Test
-    void testRegistry() {
-        String uname = "test2";
-        String pwd = "Aa123456";
-        String phone = "110";
-        System.out.println(adminService.register(uname, pwd, phone));
-    }
+    @Autowired
+    private RegisterUserService registerUserService;
 
     @Autowired
-    private UCMapper ucMapper;
-
-    @Autowired
-    private UCService ucService;
+    private UserService userService;
 
     @Test
-    void testUCRegistry() {
-        String ucname = "test2";
-        String pwd = "Aa123456";
-        String phone = "110";
-        System.out.println(ucService.register(ucname,pwd,phone));
+    void testAdminRegister() {
+        Admin admin = new Admin();
+        admin.setUsername("admin");
+        admin.setPassword("Aa1234567");
+        admin.setPhone("12345678901");
+//        admin.setCreatedAt(LocalDateTime.now());
+        adminService.register(admin);
     }
 
     @Test
-    void testRejectUC() {
-        Integer uid = 10;
-        Integer ucid = 1000000;
-        System.out.println(adminService.rejectUC(1000000, "反正不给通过"));
+    void testAdminLogin() {
+        Admin admin = new Admin();
+        admin.setUsername("admin");
+        admin.setPassword("Aa1234567");
+        System.out.println(adminService.login(admin));
     }
 
     @Test
-    void testApprovalUC() {
-        Integer uid = 10;
-        Integer ucid = 1000000;
-        System.out.println(adminService.approvalUC(1000000 ));
+    void testRegisterUserRegister() {
+        RegisterUser registerUser = new RegisterUser();
+        registerUser.setUsername("register_user");
+        registerUser.setPassword("Aa1234567");
+        registerUser.setCompanyName("company");
+        registerUser.setRegion("region");
+        System.out.println(registerUserService.register(registerUser));
     }
 
+    @Test
+    void testUserLogin() {
+        User user = new User();
+        user.setUsername("user");
+        user.setPassword("Aa1234567");
+        System.out.println(userService.login(user));
+    }
 
     @Test
-    void testComLogin() {
-        String cname = "test2";
-        String pwd = "Aa123456";
-        LoginInfo loginInfo = comService.login(cname, pwd);
-        System.out.println(loginInfo);
+    void testGetAllRegisterUser() {
+        System.out.println(adminService.getAllRegisterUser());
+    }
+
+    @Test
+    void testApproval() {
+        System.out.println(adminService.approval(1000016));
+    }
+
+    @Test
+    void testInsertEquipment() {
+        Equipment equipment = new Equipment();
+        equipment.setEname("equipment");
+        equipment.setEcode("code");
+        equipment.setRegistrationNumber("number");
+        equipment.setVersion("version");
+        System.out.println(userService.insertEquipment(equipment));
+    }
+
+    @Test
+    void testExpotEquipment() {
+        System.out.println(adminService.exportAllByCompanyName("companyName"));
     }
 }

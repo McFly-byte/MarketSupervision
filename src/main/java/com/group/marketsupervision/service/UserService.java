@@ -8,9 +8,14 @@ package com.group.marketsupervision.service;
 import com.group.marketsupervision.pojo.Equipment;
 import com.group.marketsupervision.pojo.LoginInfo;
 import com.group.marketsupervision.pojo.Result;
+import com.group.marketsupervision.pojo.User;
 
-public interface ComService {
-    LoginInfo login(String cname, String pwd);
+import java.util.List;
+
+public interface UserService {
+    Result login(User user);
 
     Result insertEquipment(Equipment equipment);
+
+    Result importEquipments(List<Equipment> equipments);
 }

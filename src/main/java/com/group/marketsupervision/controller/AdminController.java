@@ -1,12 +1,17 @@
 package com.group.marketsupervision.controller;
 
 import com.group.marketsupervision.pojo.Admin;
+import com.group.marketsupervision.pojo.Equipment;
 import com.group.marketsupervision.pojo.LoginInfo;
 import com.group.marketsupervision.pojo.Result;
 import com.group.marketsupervision.service.AdminService;
+import com.group.marketsupervision.util.ExcelUtil;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Slf4j
 @RestController
@@ -17,49 +22,41 @@ public class AdminController {
     private AdminService adminService;
 
     @PostMapping("/login")
-    public Result login(@RequestParam("uname") String uname,
-                        @RequestParam("pwd") String pwd
-    ){
-        log.info("管理员登录 , {} {}", uname, pwd);
-        LoginInfo loginInfo = adminService.login(uname, pwd);
-        if(loginInfo != null){
-            return Result.success(loginInfo);
-        }
-        return Result.error("用户名或密码错误");
+    public Result login(@RequestBody Admin admin) {
+        log.info("管理员登录 , {} {}", admin.getUsername(), admin.getPassword());
+        return adminService.login(admin);
     }
 
     @PostMapping("/register")
     public Result register(
-            @RequestParam("uname") String uname,
-            @RequestParam("pwd") String pwd,
-            @RequestParam("phone") String phone
+            @RequestBody Admin admin
     ) {
-        log.info("管理员注册：{} {} {}", uname, pwd, phone);
-        return adminService.register(uname, pwd, phone);
+        log.info("管理员注册：{} {} {}", admin.getUsername(), admin.getPassword(), admin.getPhone());
+        return adminService.register(admin);
     }
 
-    @PostMapping("rejectUC")
-    public Result rejectUC(
-            @RequestParam("uid") Integer uid,
-            @RequestParam("ucid") Integer ucid,
-            @RequestParam("comment") String comment
-    ) {
-        return adminService.rejectUC( ucid, comment );
+    @PostMapping("reject")
+    public Result reject(@RequestBody Integer id ) { // 企业用户id
+        return adminService.reject( id );
     }
 
-    @PostMapping("approvalUC")
-    public Result approvalUC (
-            @RequestParam("uid") Integer uid,
-            @RequestParam("ucid") Integer ucid
-    ) {
-        return adminService.approvalUC( ucid );
+    @PostMapping("approval")
+    public Result approvalUC (@RequestBody Integer id ) { // 企业用户id
+        return adminService.approval( id );
     }
 
-    @GetMapping("getAllUnverifiedCom")
-    public Result getAllUnverifiedCom() {
-        return adminService.getAllUnverifiedCom();
+    @GetMapping("getAllRegisterUser")
+    public Result getAllRegisterUser() {
+        return adminService.getAllRegisterUser();
     }
 
+    @GetMapping("/exportAllByCompanyName")
+    public void  exportAllEquipment(@RequestParam String companyName,
+                                    HttpServletResponse response) throws Exception {
+        log.info("批量导出 {} 全部设备" , companyName);
+        List<Equipment> equipments = adminService.exportAllByCompanyName(companyName);
+        ExcelUtil.exportEquipment(equipments, response);
+    }
 
 
 }

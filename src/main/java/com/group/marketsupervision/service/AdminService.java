@@ -6,20 +6,25 @@
 package com.group.marketsupervision.service;
 
 import com.group.marketsupervision.pojo.Admin;
+import com.group.marketsupervision.pojo.Equipment;
 import com.group.marketsupervision.pojo.LoginInfo;
 import com.group.marketsupervision.pojo.Result;
 
+import java.util.List;
+
 public interface AdminService {
     /** 登录 */
-    LoginInfo login(String uname, String pwd);
+    Result login(Admin admin);
 
     /** 注册 */
-    Result register(String uname, String pwd, String phone);
+    Result register(Admin admin);
 
     /** 获取全部未审核企业用户 */
-    Result getAllUnverifiedCom();
+    Result getAllRegisterUser();
 
-    Result rejectUC(Integer ucid, String comment );
+    Result reject(Integer id );
 
-    Result approvalUC(Integer ucid);
+    Result approval(Integer id);
+
+    List<Equipment> exportAllByCompanyName(String companyName);
 }
