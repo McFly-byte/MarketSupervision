@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -33,8 +34,8 @@ public class UserServiceImpl implements UserService {
             return Result.error("用户不存在");
         }
 
-        if (!SecurityUtils.matchesPassword(user.getPassword(), userLogin.getPassword())) {
-            return null;
+        if (!Objects.equals(user.getPassword(), userLogin.getPassword())) {
+            return Result.error("密码错误");
         }
         String jwt = JwtUtils.genJwt(userLogin.getUsername());
         LoginInfo loginInfo = new LoginInfo(userLogin.getId(), userLogin.getUsername(), jwt);
@@ -51,7 +52,6 @@ public class UserServiceImpl implements UserService {
     @PostMapping("/importEquipments")
     public Result importEquipments(List<Equipment> equipments) {
         for (Equipment equipment : equipments) {
-            String companyName = equipment.getCompanyName();
             equipment.setCreatedAt(LocalDateTime.now());
             equipment.setIsInspected(equipment.isInspected());
             equipment.setIsOverdue(equipment.isOverdue());

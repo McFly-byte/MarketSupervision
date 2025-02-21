@@ -16,5 +16,5 @@ server:
       force: true
       charset: UTF-8
       enabled: true
-  port: 8000  # 建议显式指定端口
+  port: 8001  # 建议显式指定端口
   address: 0.0.0.0

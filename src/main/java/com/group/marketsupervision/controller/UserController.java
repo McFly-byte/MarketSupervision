@@ -19,6 +19,7 @@ import java.util.Map;
 @Slf4j
 @RestController
 @RequestMapping("/user")
+@CrossOrigin(origins = "http://localhost:5173") // todo 后面改成服务器前端地址
 public class UserController {
 
     @Autowired
@@ -41,6 +42,7 @@ public class UserController {
         try {
             log.info("解析用户上传文件 , {}", file.getOriginalFilename());
             List<Equipment> equipments = ExcelUtil.parse(file);
+            log.info("解析结果 , {}", equipments);
             return Result.success(equipments);
         } catch (Exception e) {
             e.printStackTrace();

@@ -29,8 +29,8 @@ public class RegisterUserServiceImpl implements RegisterUserService {
         if (pwd == null || pwd.length() < 8 || !pwd.matches(".*[A-Z].*") || !pwd.matches(".*[a-z].*")) {
             return Result.error("密码长度至少8位，需包含至少一个大、小写字母");
         }
-        String encryptedPwd = SecurityUtils.encodePassword(pwd);
-        registerUser.setPassword(encryptedPwd);
+//        String encryptedPwd = SecurityUtils.encodePassword(pwd);
+//        registerUser.setPassword(encryptedPwd);
         registerUser.setCreatedTime(LocalDateTime.now());
         registerUserMapper.insertRegisterUser(registerUser);
         return Result.success("申请成功，请等待审核");

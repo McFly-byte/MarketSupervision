@@ -111,4 +111,11 @@ public class AdminServiceImpl implements AdminService {
         return equipmentMapper.getEquipmentsByCompanyName(companyName);
     }
 
+    @Override
+    public Result getAllUser() {
+        List<User> users = userMapper.getAllUser();
+        if (users == null) return Result.error("没有用户");
+        return Result.success(users);
+    }
+
 }

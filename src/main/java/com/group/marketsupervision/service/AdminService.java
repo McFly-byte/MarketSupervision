@@ -27,4 +27,6 @@ public interface AdminService {
     Result approval(Integer id);
 
     List<Equipment> exportAllByCompanyName(String companyName);
+
+    Result getAllUser();
 }

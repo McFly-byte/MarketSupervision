@@ -16,6 +16,7 @@ import java.util.List;
 @Slf4j
 @RestController
 @RequestMapping("/admin")
+@CrossOrigin(origins = "http://localhost:5173") // todo 后面改成服务器前端地址
 public class AdminController {
 
     @Autowired
@@ -41,7 +42,7 @@ public class AdminController {
     }
 
     @PostMapping("approval")
-    public Result approvalUC (@RequestBody Integer id ) { // 企业用户id
+    public Result approval (@RequestBody Integer id ) { // 企业用户id
         return adminService.approval( id );
     }
 
@@ -56,6 +57,11 @@ public class AdminController {
         log.info("批量导出 {} 全部设备" , companyName);
         List<Equipment> equipments = adminService.exportAllByCompanyName(companyName);
         ExcelUtil.exportEquipment(equipments, response);
+    }
+
+    @GetMapping("/getAllUser")
+    public Result getAllUser() {
+        return adminService.getAllUser();
     }
 
 
