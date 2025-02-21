@@ -6,7 +6,6 @@ import com.group.marketsupervision.pojo.User;
 import com.group.marketsupervision.pojo.Equipment;
 import com.group.marketsupervision.pojo.LoginInfo;
 import com.group.marketsupervision.pojo.Result;
-import com.group.marketsupervision.util.ExcelUtil;
 import com.group.marketsupervision.util.JwtUtils;
 import com.group.marketsupervision.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
