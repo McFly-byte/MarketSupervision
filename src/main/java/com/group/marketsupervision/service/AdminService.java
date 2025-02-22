@@ -29,4 +29,8 @@ public interface AdminService {
     List<Equipment> exportAllByCompanyName(String companyName);
 
     Result getAllUser();
+
+    Result getEquipmentsByCompanyName(String companyName);
+
+    Result deleteEquipmentById(int id);
 }

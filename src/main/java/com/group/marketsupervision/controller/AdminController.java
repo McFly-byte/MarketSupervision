@@ -1,5 +1,6 @@
 package com.group.marketsupervision.controller;
 
+import com.group.marketsupervision.mapper.EquipmentMapper;
 import com.group.marketsupervision.pojo.Admin;
 import com.group.marketsupervision.pojo.Equipment;
 import com.group.marketsupervision.pojo.LoginInfo;
@@ -12,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @RestController
@@ -21,6 +23,8 @@ public class AdminController {
 
     @Autowired
     private AdminService adminService;
+    @Autowired
+    private EquipmentMapper equipmentMapper;
 
     @PostMapping("/login")
     public Result login(@RequestBody Admin admin) {
@@ -37,12 +41,16 @@ public class AdminController {
     }
 
     @PostMapping("reject")
-    public Result reject(@RequestBody Integer id ) { // 企业用户id
+    public Result reject(@RequestBody Map<String, Integer> request ) { // 企业用户id
+        Integer id = request.get("id"); // 从 JSON 对象中提取 id
+        log.info("审核企业用户-拒绝（id：{}）", id);
         return adminService.reject( id );
     }
 
     @PostMapping("approval")
-    public Result approval (@RequestBody Integer id ) { // 企业用户id
+    public Result approval (@RequestBody Map<String, Integer> request ) { // 企业用户id
+        Integer id = request.get("id"); // 从 JSON 对象中提取 id
+        log.info("审核企业用户-通过（id：{}）", id);
         return adminService.approval( id );
     }
 
@@ -62,6 +70,20 @@ public class AdminController {
     @GetMapping("/getAllUser")
     public Result getAllUser() {
         return adminService.getAllUser();
+    }
+
+    @GetMapping("/getAllEquipments")
+    public Result getAllEquipments( @RequestBody Map<String, String> request) {
+        String companyName = request.get("companyName");
+        log.info("按企业名称查找全部设备，{}" , companyName);
+        return adminService.getEquipmentsByCompanyName(companyName);
+    }
+
+    @DeleteMapping("/deleteEquipment")
+    public Result deleteEquipment(@RequestBody Equipment equipment) {
+        Integer id = equipment.getId();
+        log.info("删除设备 , {}", id);
+        return adminService.deleteEquipmentById(id);
     }
 
 

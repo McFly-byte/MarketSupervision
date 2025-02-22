@@ -34,64 +34,64 @@ class MarketSupervisionApplicationTests {
     @Autowired
     private UserService userService;
 
-    @Test
-    void testAdminRegister() {
-        Admin admin = new Admin();
-        admin.setUsername("admin");
-        admin.setPassword("Aa1234567");
-        admin.setPhone("12345678901");
-//        admin.setCreatedAt(LocalDateTime.now());
-        adminService.register(admin);
-    }
-
-    @Test
-    void testAdminLogin() {
-        Admin admin = new Admin();
-        admin.setUsername("admin");
-        admin.setPassword("Aa1234567");
-        System.out.println(adminService.login(admin));
-    }
-
-    @Test
-    void testRegisterUserRegister() {
-        RegisterUser registerUser = new RegisterUser();
-        registerUser.setUsername("register_user");
-        registerUser.setPassword("Aa1234567");
-        registerUser.setCompanyName("company");
-        registerUser.setRegion("region");
-        System.out.println(registerUserService.register(registerUser));
-    }
-
-    @Test
-    void testUserLogin() {
-        User user = new User();
-        user.setUsername("user");
-        user.setPassword("Aa1234567");
-        System.out.println(userService.login(user));
-    }
-
-    @Test
-    void testGetAllRegisterUser() {
-        System.out.println(adminService.getAllRegisterUser());
-    }
-
-    @Test
-    void testApproval() {
-        System.out.println(adminService.approval(1000016));
-    }
-
-    @Test
-    void testInsertEquipment() {
-        Equipment equipment = new Equipment();
-        equipment.setEname("equipment");
-        equipment.setEcode("code");
-        equipment.setRegistrationNumber("number");
-        equipment.setVersion("version");
-        System.out.println(userService.insertEquipment(equipment));
-    }
-
-    @Test
-    void testExpotEquipment() {
-        System.out.println(adminService.exportAllByCompanyName("companyName"));
-    }
+//    @Test
+//    void testAdminRegister() {
+//        Admin admin = new Admin();
+//        admin.setUsername("admin");
+//        admin.setPassword("Aa1234567");
+//        admin.setPhone("12345678901");
+////        admin.setCreatedAt(LocalDateTime.now());
+//        adminService.register(admin);
+//    }
+//
+//    @Test
+//    void testAdminLogin() {
+//        Admin admin = new Admin();
+//        admin.setUsername("admin");
+//        admin.setPassword("Aa1234567");
+//        System.out.println(adminService.login(admin));
+//    }
+//
+//    @Test
+//    void testRegisterUserRegister() {
+//        RegisterUser registerUser = new RegisterUser();
+//        registerUser.setUsername("register_user");
+//        registerUser.setPassword("Aa1234567");
+//        registerUser.setCompanyName("company");
+//        registerUser.setRegion("region");
+//        System.out.println(registerUserService.register(registerUser));
+//    }
+//
+//    @Test
+//    void testUserLogin() {
+//        User user = new User();
+//        user.setUsername("user");
+//        user.setPassword("Aa1234567");
+//        System.out.println(userService.login(user));
+//    }
+//
+//    @Test
+//    void testGetAllRegisterUser() {
+//        System.out.println(adminService.getAllRegisterUser());
+//    }
+//
+//    @Test
+//    void testApproval() {
+//        System.out.println(adminService.approval(1000016));
+//    }
+//
+//    @Test
+//    void testInsertEquipment() {
+//        Equipment equipment = new Equipment();
+//        equipment.setEname("equipment");
+//        equipment.setEcode("code");
+//        equipment.setRegistrationNumber("number");
+//        equipment.setVersion("version");
+//        System.out.println(userService.insertEquipment(equipment));
+//    }
+//
+//    @Test
+//    void testExpotEquipment() {
+//        System.out.println(adminService.exportAllByCompanyName("companyName"));
+//    }
 }

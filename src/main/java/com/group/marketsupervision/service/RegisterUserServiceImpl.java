@@ -19,8 +19,12 @@ public class RegisterUserServiceImpl implements RegisterUserService {
     public Result register(RegisterUser registerUser) {
         String uname = registerUser.getUsername();
         String pwd = registerUser.getPassword();
+        String companyName = registerUser.getCompanyName();
         if (uname == null || uname.trim().isEmpty()) {
             return Result.error("用户名不能为空");
+        }
+        if ( companyName == null || companyName.trim().isEmpty()) {
+            return Result.error("公司名不能为空");
         }
         RegisterUser existingRegisterUser = registerUserMapper.getRegisterUserByUsername(uname);
         if (existingRegisterUser != null) {
@@ -29,8 +33,7 @@ public class RegisterUserServiceImpl implements RegisterUserService {
         if (pwd == null || pwd.length() < 8 || !pwd.matches(".*[A-Z].*") || !pwd.matches(".*[a-z].*")) {
             return Result.error("密码长度至少8位，需包含至少一个大、小写字母");
         }
-//        String encryptedPwd = SecurityUtils.encodePassword(pwd);
-//        registerUser.setPassword(encryptedPwd);
+
         registerUser.setCreatedTime(LocalDateTime.now());
         registerUserMapper.insertRegisterUser(registerUser);
         return Result.success("申请成功，请等待审核");

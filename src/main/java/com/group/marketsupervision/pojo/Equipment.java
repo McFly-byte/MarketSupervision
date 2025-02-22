@@ -28,6 +28,7 @@ public class Equipment {
     private Integer isInspected; // 是否已检验
     private Integer isOverdue; // 是否逾期
     private LocalDateTime createdAt; // 创建条目时间
+    private LocalDateTime modifiedAt; // 更新条目时间
     private String comment; // 备注
 
     public Integer isOverdue() {

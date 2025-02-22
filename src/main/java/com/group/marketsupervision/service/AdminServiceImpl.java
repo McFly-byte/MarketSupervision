@@ -38,7 +38,7 @@ public class AdminServiceImpl implements AdminService {
             return Result.error("密码错误");
         }
         String jwt = JwtUtils.genJwt(adminLogin.getUsername());
-        LoginInfo loginInfo = new LoginInfo(adminLogin.getId(), adminLogin.getUsername(), jwt);
+        LoginInfo loginInfo = new LoginInfo(adminLogin.getId(), adminLogin.getUsername(),"", jwt);
         return Result.success(loginInfo);
     }
 
@@ -67,7 +67,7 @@ public class AdminServiceImpl implements AdminService {
         adminMapper.insertAdmin(admin);
 
         String jwt = JwtUtils.genJwt(uname);
-        LoginInfo loginInfo = new LoginInfo(admin.getId(), uname, jwt);
+        LoginInfo loginInfo = new LoginInfo(admin.getId(), uname,"", jwt);
 
         return Result.success(loginInfo);
     }
@@ -114,8 +114,24 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public Result getAllUser() {
         List<User> users = userMapper.getAllUser();
-        if (users == null) return Result.error("没有用户");
+        if (users == null) return Result.error("无用户");
         return Result.success(users);
+    }
+
+    @Override
+    public Result getEquipmentsByCompanyName(String companyName) {
+        List<Equipment> equipments = equipmentMapper.getEquipmentsByCompanyName(companyName);
+        if (equipments == null) return Result.error("无设备");
+        return Result.success(equipments);
+    }
+
+    @Override
+    public Result deleteEquipmentById(int id) {
+        if (equipmentMapper.existsById(id) == null) {
+            return Result.error("设备不存在");
+        }
+        equipmentMapper.deleteEquipmentById(id);
+        return Result.success("删除成功");
     }
 
 }

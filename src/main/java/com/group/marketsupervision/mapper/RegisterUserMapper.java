@@ -26,9 +26,6 @@ public interface RegisterUserMapper {
     @Select("select * from register_user where id = #{id}")
     RegisterUser getRegisterUserById(Integer id);
 
-//    @Update("update unverifiedcom SET comment = #{comment} WHERE id = #{id} ")
-//    void updateCommentById( Integer id, String comment );
-//
     @Delete("DELETE FROM register_user WHERE id = #{id}")
     void deleteById( Integer id );
 }

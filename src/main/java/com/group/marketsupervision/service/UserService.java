@@ -18,4 +18,8 @@ public interface UserService {
     Result insertEquipment(Equipment equipment);
 
     Result importEquipments(List<Equipment> equipments);
+
+    Result deleteEquipmentById(int id);
+
+    Result getAllEquipments(Integer id);
 }

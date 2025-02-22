@@ -56,5 +56,18 @@ public class UserController {
         return userService.importEquipments(equipments);
     }
 
+    @DeleteMapping("/deleteEquipmentById")
+    public Result deleteEquipmentById(@RequestBody Equipment equipment) {
+        Integer id = equipment.getId();
+        log.info("删除设备 , {}", id);
+        return userService.deleteEquipmentById(id);
+    }
+
+    @GetMapping("/getAllEquipments")
+    public Result getAllEquipments(@RequestBody Map<String, Integer> request) {
+        Integer id = request.get("id");
+        log.info("获取用户绑定企业的所有设备 , 用户id：{}", id);
+        return userService.getAllEquipments(id);
+    }
 
 }

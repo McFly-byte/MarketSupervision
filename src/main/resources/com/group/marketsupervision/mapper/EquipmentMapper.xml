@@ -30,8 +30,8 @@
         INSERT INTO equipment(
             ename, ecode, registrationNumber, version, usingPlace,
             companyName, type, productNumber, commissioningDate,
-            inspectionDate, comment, nextInspectionDate, createdAt,
-            is_inspected, is_overdue
+            inspectionDate, comment, nextInspectionDate,
+            createdAt, modifiedAt, is_inspected, is_overdue
         )
         VALUES(
                   #{ename},
@@ -47,14 +47,52 @@
                   #{comment},
                   #{nextInspectionDate, typeHandler=org.apache.ibatis.type.LocalDateTypeHandler},
                   #{createdAt},
+                  #{modifiedAt},
                   #{isInspected},
                   #{isOverdue}
               )
     </insert>
 
+    <update id="updateEquipmentByRegistrationNumber">
+        UPDATE equipment
+        SET
+            ename = #{ename},
+            ecode = #{ecode},
+            registrationNumber = #{registrationNumber},
+            version = #{version},
+            usingPlace = #{usingPlace},
+            companyName = #{companyName},
+            type = #{type},
+            productNumber = #{productNumber},
+            commissioningDate = #{commissioningDate, typeHandler=org.apache.ibatis.type.LocalDateTypeHandler},
+            inspectionDate = #{inspectionDate, typeHandler=org.apache.ibatis.type.LocalDateTypeHandler},
+            comment = #{comment},
+            nextInspectionDate = #{nextInspectionDate, typeHandler=org.apache.ibatis.type.LocalDateTypeHandler},
+            createdAt = #{createdAt},
+            modifiedAt = #{modifiedAt},
+            is_inspected = #{isInspected},
+            is_overdue = #{isOverdue}
+        WHERE registrationNumber = #{registrationNumber}
+    </update>
+
     <select id="getEquipmentsByCompanyName" resultMap="equipmentResultMap">
         SELECT * FROM equipment
         WHERE companyName = #{companyName}
     </select>
+
+    <select id="getEquipmentByRegistrationNumber" resultType="com.group.marketsupervision.pojo.Equipment">
+        SELECT * FROM equipment
+        WHERE registrationNumber = #{registrationNumber}
+    </select>
+
+    <select id="existsById" resultType="int">
+        SELECT COUNT(*) FROM equipment
+        WHERE id = #{id}
+    </select>
+
+    <delete id="deleteEquipmentById">
+        DELETE FROM equipment
+        WHERE id = #{id}
+    </delete>
 
 </mapper>

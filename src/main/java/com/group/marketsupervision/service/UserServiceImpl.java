@@ -38,25 +38,60 @@ public class UserServiceImpl implements UserService {
             return Result.error("密码错误");
         }
         String jwt = JwtUtils.genJwt(userLogin.getUsername());
-        LoginInfo loginInfo = new LoginInfo(userLogin.getId(), userLogin.getUsername(), jwt);
+        LoginInfo loginInfo = new LoginInfo(userLogin.getId(), userLogin.getUsername(), userLogin.getCompanyName(), jwt);
         return Result.success(loginInfo);
     }
 
     @Override
     public Result insertEquipment(Equipment equipment) {
-        equipment.setCreatedAt(LocalDateTime.now());
-        equipmentMapper.insertEquipment(equipment);
-        return Result.success(equipment);
-    }
-
-    @PostMapping("/importEquipments")
-    public Result importEquipments(List<Equipment> equipments) {
-        for (Equipment equipment : equipments) {
-            equipment.setCreatedAt(LocalDateTime.now());
+        Equipment existEquipment = equipmentMapper.getEquipmentByRegistrationNumber(equipment.getRegistrationNumber());
+        if ( existEquipment != null) {
+            equipment.setModifiedAt(LocalDateTime.now());
             equipment.setIsInspected(equipment.isInspected());
             equipment.setIsOverdue(equipment.isOverdue());
-            equipmentMapper.insertEquipment(equipment);
+            equipmentMapper.updateEquipmentByRegistrationNumber(equipment);
+            return Result.success("设备信息已存在，修改成功");
         }
+        equipment.setCreatedAt(LocalDateTime.now());
+        equipment.setModifiedAt(LocalDateTime.now());
+        equipment.setIsInspected(equipment.isInspected());
+        equipment.setIsOverdue(equipment.isOverdue());
+        equipmentMapper.insertEquipment(equipment);
+        return Result.success("添加成功");
+    }
+
+    public Result importEquipments(List<Equipment> equipments) {
+        for (Equipment equipment : equipments) {
+            Equipment existEquipment = equipmentMapper.getEquipmentByRegistrationNumber(equipment.getRegistrationNumber());
+            if ( existEquipment != null) {
+                equipment.setIsInspected(equipment.isInspected());
+                equipment.setIsOverdue(equipment.isOverdue());
+                equipment.setCreatedAt(existEquipment.getCreatedAt());
+                equipment.setModifiedAt(LocalDateTime.now());
+                equipmentMapper.updateEquipmentByRegistrationNumber(equipment);
+            }
+            else {
+                equipment.setCreatedAt(LocalDateTime.now());
+                equipment.setIsInspected(equipment.isInspected());
+                equipment.setIsOverdue(equipment.isOverdue());
+                equipmentMapper.insertEquipment(equipment);
+            }
+        }
+        return Result.success( "导入成功");
+    }
+
+    public Result deleteEquipmentById(int id) {
+        if (equipmentMapper.existsById(id) == null) {
+            return Result.error("设备不存在");
+        }
+        equipmentMapper.deleteEquipmentById(id);
+        return Result.success("删除成功");
+    }
+
+    public Result getAllEquipments(Integer id) {
+        User user = userMapper.getUserById(id);
+        String companyName = user.getCompanyName();
+        List<Equipment> equipments = equipmentMapper.getEquipmentsByCompanyName(companyName);
         return Result.success(equipments);
     }
 
