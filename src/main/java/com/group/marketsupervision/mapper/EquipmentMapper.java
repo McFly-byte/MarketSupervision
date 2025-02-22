@@ -13,6 +13,8 @@ import java.util.List;
 
 @Mapper
 public interface EquipmentMapper {
+    List<Equipment> getAllEquipments();
+
     void insertEquipment(Equipment equipment);
 
     List<Equipment> getEquipmentsByCompanyName(String companyName);
@@ -24,4 +26,6 @@ public interface EquipmentMapper {
     void deleteEquipmentById(int id);
 
     Integer existsById(int id);
+
+    void updateOverdueStatus(int id, int isOverdue);
 }

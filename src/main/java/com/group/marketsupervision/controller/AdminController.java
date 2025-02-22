@@ -86,6 +86,33 @@ public class AdminController {
         return adminService.deleteEquipmentById(id);
     }
 
+    @GetMapping("/getAllOverdueEquips")
+    public Result getAllOverdueEquips() {
+        log.info("获取全部逾期设备");
+        return Result.success(adminService.getAllOverdueEquips());
+    }
+
+    @GetMapping("/getOverdueEquipsByCompanyName")
+    public Result getOverdueEquipmentsByCompanyName(@RequestBody Map<String, String> request) {
+        String companyName = request.get("companyName");
+        log.info("按企业名称查找逾期设备，{}" , companyName);
+        return Result.success(adminService.getOverdueEquipmentsByCompanyName(companyName));
+    }
+
+    @GetMapping("/getAllWillOverdueEquips")
+    public Result getAllWillOverdueEquips() {
+        log.info("获取全部即将逾期设备");
+        return Result.success(adminService.getAllWillOverdueEquips());
+    }
+
+    @GetMapping("/getWillOverdueEquipsByCompanyName")
+    public Result getWillOverdueEquipsByCompanyName(@RequestBody Map<String, String> request) {
+        String companyName = request.get("companyName");
+        log.info("按企业名称查找即将逾期设备，{}" , companyName);
+        return Result.success(adminService.getWillOverdueEquipsByCompanyName(companyName));
+    }
+
+
 
 }
 

@@ -33,4 +33,13 @@ public interface AdminService {
     Result getEquipmentsByCompanyName(String companyName);
 
     Result deleteEquipmentById(int id);
+
+    Result getAllOverdueEquips();
+
+    Result getOverdueEquipmentsByCompanyName(String companyName);
+
+    Result getAllWillOverdueEquips();
+
+    Result getWillOverdueEquipsByCompanyName(String companyName);
+
 }

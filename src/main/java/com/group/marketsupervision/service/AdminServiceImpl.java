@@ -10,7 +10,9 @@ import com.group.marketsupervision.util.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -133,5 +135,62 @@ public class AdminServiceImpl implements AdminService {
         equipmentMapper.deleteEquipmentById(id);
         return Result.success("删除成功");
     }
+
+    @Override
+    public Result getAllOverdueEquips() {
+        List<Equipment> equipments = equipmentMapper.getAllEquipments();
+        List<Equipment> overdueEquips = new ArrayList<>();
+        for (Equipment equipment : equipments) {
+            if (equipment.getIsOverdue() == 1) {
+                overdueEquips.add(equipment);
+            }
+        }
+        if ( overdueEquips.size() == 0 ) return Result.error("无逾期设备");
+        return Result.success(overdueEquips);
+    }
+
+    @Override
+    public Result getOverdueEquipmentsByCompanyName(String companyName) {
+        List<Equipment> equipments = equipmentMapper.getEquipmentsByCompanyName(companyName);
+        List<Equipment> overdueEquips = new ArrayList<>();
+        for (Equipment equipment : equipments) {
+            if (equipment.getIsOverdue() == 1) {
+                overdueEquips.add(equipment);
+            }
+        }
+        if ( overdueEquips.size() == 0 ) return Result.error("无逾期设备");
+        return Result.success(overdueEquips);
+    }
+
+    @Override
+    public Result getAllWillOverdueEquips() {
+        LocalDate thresholdDate = LocalDate.now().plusDays(60);
+        List<Equipment> equipments = equipmentMapper.getAllEquipments();
+        List<Equipment> willOverdueEquips = new ArrayList<>();
+        for (Equipment equipment : equipments) {
+            if ( equipment.getNextInspectionDate().isBefore(thresholdDate) &&
+                    equipment.getNextInspectionDate().isAfter(LocalDate.now())) {
+                willOverdueEquips.add(equipment);
+            }
+        }
+        if( willOverdueEquips.size() == 0 ) return Result.error("无即将逾期设备");
+        return Result.success(willOverdueEquips);
+    }
+
+    @Override
+    public Result getWillOverdueEquipsByCompanyName(String companyName) {
+        LocalDate thresholdDate = LocalDate.now().plusDays(60);
+        List<Equipment> equipments = equipmentMapper.getEquipmentsByCompanyName(companyName);
+        List<Equipment> willOverdueEquips = new ArrayList<>();
+        for (Equipment equipment : equipments) {
+            if ( equipment.getNextInspectionDate().isBefore(thresholdDate) &&
+                    equipment.getNextInspectionDate().isAfter(LocalDate.now())) {
+                willOverdueEquips.add(equipment);
+            }
+        }
+        if( willOverdueEquips.size() == 0 ) return Result.error("无即将逾期设备");
+        return Result.success(willOverdueEquips);
+    }
+
 
 }

@@ -75,6 +75,17 @@
         WHERE registrationNumber = #{registrationNumber}
     </update>
 
+    <update id="updateOverdueStatus">
+        UPDATE equipment
+        SET
+            is_overdue = #{isOverdue}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getAllEquipments" resultMap="equipmentResultMap">
+        SELECT * FROM equipment
+    </select>
+
     <select id="getEquipmentsByCompanyName" resultMap="equipmentResultMap">
         SELECT * FROM equipment
         WHERE companyName = #{companyName}

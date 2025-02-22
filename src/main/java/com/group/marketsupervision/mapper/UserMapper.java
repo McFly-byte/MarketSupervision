@@ -22,6 +22,9 @@ public interface UserMapper {
     @Select("select * from user where id = #{id}")
     User getUserById(int id);
 
+    @Select("select * from user where company_name = #{companyName}")
+    User getUserByCompanyName(String companyName);
+
     @Options(useGeneratedKeys = true, keyProperty = "id")
     @Insert("INSERT INTO user(username, password, company_name, region, created_time) " +
             "values(#{username}, #{password}, #{companyName}, #{region}, #{createdTime})")
