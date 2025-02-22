@@ -21,8 +21,8 @@ public class EquipmentCheckScheduler {
     private NotificationService notificationService;
 
 
-//    @Scheduled(cron = "${equipment.check.cron:0 0 1 * * ?}")
-    @Scheduled(cron = "${equipment.check.cron:0 * * * * ?}")
+    @Scheduled(cron = "${equipment.check.cron:0 0 1 * * ?}")
+//    @Scheduled(cron = "${equipment.check.cron:0 * * * * ?}")
     public void checkOverdueEquipment() {
         log.info("开始执行设备逾期检查...");
         List<Information> newNotifications = equipmentService.checkAndUpdateOverdueStatus();

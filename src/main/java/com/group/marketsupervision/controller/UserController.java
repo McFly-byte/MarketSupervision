@@ -64,8 +64,7 @@ public class UserController {
     }
 
     @GetMapping("/getAllEquipments")
-    public Result getAllEquipments(@RequestBody Map<String, Integer> request) {
-        Integer id = request.get("id");
+    public Result getAllEquipments( @RequestParam Integer id) {
         log.info("获取用户绑定企业的所有设备 , 用户id：{}", id);
         return userService.getAllEquipments(id);
     }

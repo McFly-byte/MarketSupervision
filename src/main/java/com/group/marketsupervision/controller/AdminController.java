@@ -73,8 +73,13 @@ public class AdminController {
     }
 
     @GetMapping("/getAllEquipments")
-    public Result getAllEquipments( @RequestBody Map<String, String> request) {
-        String companyName = request.get("companyName");
+    public Result getAllEquipments() {
+        log.info("获取全部设备");
+        return Result.success(equipmentMapper.getAllEquipments());
+    }
+
+    @GetMapping("/getAllEquipmentsByCompanyName")
+    public Result getAllEquipmentsByCompanyName( @RequestParam String companyName) {
         log.info("按企业名称查找全部设备，{}" , companyName);
         return adminService.getEquipmentsByCompanyName(companyName);
     }
@@ -93,8 +98,7 @@ public class AdminController {
     }
 
     @GetMapping("/getOverdueEquipsByCompanyName")
-    public Result getOverdueEquipmentsByCompanyName(@RequestBody Map<String, String> request) {
-        String companyName = request.get("companyName");
+    public Result getOverdueEquipmentsByCompanyName( @RequestParam String companyName) {
         log.info("按企业名称查找逾期设备，{}" , companyName);
         return Result.success(adminService.getOverdueEquipmentsByCompanyName(companyName));
     }
@@ -106,8 +110,7 @@ public class AdminController {
     }
 
     @GetMapping("/getWillOverdueEquipsByCompanyName")
-    public Result getWillOverdueEquipsByCompanyName(@RequestBody Map<String, String> request) {
-        String companyName = request.get("companyName");
+    public Result getWillOverdueEquipsByCompanyName( @RequestParam String companyName) {
         log.info("按企业名称查找即将逾期设备，{}" , companyName);
         return Result.success(adminService.getWillOverdueEquipsByCompanyName(companyName));
     }
