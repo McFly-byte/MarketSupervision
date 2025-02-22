@@ -11,6 +11,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 
 @Mapper
 public interface UserMapper {
@@ -21,4 +23,7 @@ public interface UserMapper {
     @Insert("INSERT INTO user(username, password, company_name, region, created_time) " +
             "values(#{username}, #{password}, #{companyName}, #{region}, #{createdTime})")
     void insert(User user);
+
+    @Select("select * from user")
+    List<User> getAllUser();
 }

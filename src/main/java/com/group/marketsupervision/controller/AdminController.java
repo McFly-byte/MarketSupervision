@@ -58,6 +58,53 @@ public class AdminController {
         ExcelUtil.exportEquipment(equipments, response);
     }
 
+    @GetMapping("getUserByName")
+    //从前端获取一个name，从数据库中查询这个用户，如果有则返回其信息
+    public Result getUserByName(
+            @RequestParam("username") String username
+    ) {
+        return adminService.getUserByName(username);
+    }
+
+    //查看所有企业用户，是已经注册的
+    @GetMapping("getAllUser")
+    public Result getAllUser() {
+        return adminService.getAllUser();
+    }
+
+    @GetMapping("getEquipById")
+    public Result getEquipById(
+            @RequestParam("id") String id
+    ) {
+        return adminService.getEquipById(id);
+    }
+
+    @GetMapping("getAllEquipWillOverdue")
+    public Result getAllEquipWillOverdue() {
+        return adminService.getAllEquipWillOverdue();
+    }
+
+    @GetMapping("getEquipWillExpireByUsername")
+    public Result getEquipWillExpireByUsername(
+            @RequestParam("username") String username
+    ) {
+        return adminService.getEquipWillExpireByUsername(username);
+    }
+
+    @GetMapping("getAllOverdueEquips")
+    public Result getAllOverdueEquips() {
+        return adminService.getAllOverdueEquips();
+    }
+
+    @GetMapping("getExpiredEquipsById")
+    public Result getExpiredEquipsById(
+            @RequestParam("id") String id
+    ){
+        return adminService.getExpiredEquipsById(id);
+    }
+
+
+
 
 }
 

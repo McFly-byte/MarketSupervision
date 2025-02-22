@@ -26,6 +26,7 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     private EquipmentMapper equipmentMapper;
 
+
     @Override
     public Result login(Admin admin) {
         Admin adminLogin = adminMapper.getAdminByUname(admin.getUsername());
@@ -110,5 +111,67 @@ public class AdminServiceImpl implements AdminService {
     public List<Equipment> exportAllByCompanyName(String companyName) {
         return equipmentMapper.getEquipmentsByCompanyName(companyName);
     }
+    @Override
+    public Result getUserByName(String username) {
+        User user = userMapper.getUserByUsername(username);
+        if (user == null) return Result.error("没有找到该企业用户");
+        return Result.success(user);
+    }
+
+    @Override
+    public Result getAllUser() {
+        List<User> Userlist = userMapper.getAllUser();
+        if (Userlist == null) return Result.error("没有企业用户");
+        return Result.success(Userlist);
+    }
+
+    @Override
+    public Result getEquipById(String id) {
+        Equipment equ = equipmentMapper.getEquipById(id);
+        if (equ == null) {
+            return Result.error("该企业没有设备");
+        }
+        return Result.success(equ);
+    }
+
+    @Override
+    public Result getAllEquipWillOverdue() {
+        List<Equipment> equipmentList = equipmentMapper.getAllEquipWillOverdue();
+        // 如果设备列表为空，返回一个错误信息
+        if (equipmentList == null || equipmentList.isEmpty()) {
+            return Result.error("没有即将逾期的设备");
+        }
+        return Result.success(equipmentList);
+    }
+    @Override
+    public Result getEquipWillExpireByUsername(String username) {
+        List<Equipment> equipmentList = equipmentMapper.getEquipWillExpireByUsername(username);
+        // 如果设备列表为空，返回一个错误信息
+        if (equipmentList == null || equipmentList.isEmpty()) {
+            return Result.error("该企业没有即将逾期的设备");
+        }
+        return Result.success(equipmentList);
+    }
+
+    @Override
+    public Result getAllOverdueEquips() {
+        List<Equipment> equipmentList = equipmentMapper.getAllOverdueEquips();
+        // 如果设备列表为空，返回一个错误信息
+        if (equipmentList == null || equipmentList.isEmpty()) {
+            return Result.error("该企业没有即将逾期的设备");
+        }
+        return Result.success(equipmentList);
+    }
+
+    @Override
+    public Result getExpiredEquipsById(String id) {
+        List<Equipment> equipmentList = equipmentMapper.getExpiredEquipsById(id);
+        // 如果设备列表为空，返回一个错误信息
+        if (equipmentList == null || equipmentList.isEmpty()) {
+            return Result.error("该企业没有逾期的设备");
+        }
+        return Result.success(equipmentList);
+    }
+
 
 }
